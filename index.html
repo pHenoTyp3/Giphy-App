@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Giphy API</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+</head>
+<style>
+    /* .container{
+        align-content: center;
+        text-align: center
+    } */
+
+</style>
+
+
+<body>
+    <div class="container">
+        <h2>Giphy App</h2>
+    <form id="topic-form">
+        <label for="topic-input">Search A Topic</label>
+        <input type="text" id="topic-input">
+        <br>
+
+        <input type="submit" id="new-topic" value="Search A Topic">
+    </form>
+    <div id="buttons"></div>
+    <div id="movies-view"></div>
+    <!-- <button id="Random">Randomize</button> not working yet -->
+    <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">Image</th>
+                <th scope="col">Title</th>
+                <th scope="col">Date</th>
+                <th scope="col">Rating</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- rows will appear here-->
+            </tbody>
+          </table>
+
+</div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script type="text/javascript">
+        var topics = ["science", "technology", "cats", "travel","movies","awesome","trending"]
+
+        function displayInfo(){
+            var topic = $(this).attr("data-name")
+            console.log(topic)
+            var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + topic + "&api_key=bNKdWs9w8OibbMzgkKy7W67A1cO6xrIj&limit=3" 
+            $.ajax({
+                url: queryURL,
+                method: "GET"
+            }).then(response => {
+                for(var i = 0; i < response.data.length; i++){
+                    var tBody = $("tbody");
+                    var tRow = $("<tr>");
+                            var imgurl = response.data[i].images.original_still.url
+                            var img = $("<img>").attr("src", imgurl)
+                            var date = response.data[i].import_datetime
+                var title = response.data[i].title
+                var rating = response.data[i].rating
+        var titleTd = $("<td>").text(title);
+      var dateTd = $("<td>").text(date);
+      var ratingTd = $("<td>").text(rating);
+            tRow.append(img, titleTd, dateTd, ratingTd);
+            tBody.prepend(tRow);
+                var date = response.data[i].import_datetime
+                var title = response.data[i].title
+                var rating = response.data[i].rating
+            }
+            }).catch(function(error) {
+          console.log(error);
+        });
+        renderButtons() // - add this callback to replace the previous images
+        //not working
+        }
+
+        ///not sure how to make the 1 click download
+
+ function renderButtons() {
+           
+           $("#buttons").empty()
+           $("#movies-view").empty()
+        //   tBody.empty()
+           for (var i = 0; i < topics.length; i++) {
+               var btn = $("<button>")
+                  btn.addClass("topic-btn")
+                  btn.addClass("btn")
+                  btn.addClass("btn-primary")
+               btn.attr("data-name", topics[i])
+               btn.text(topics[i])
+               $("#buttons").append(btn)
+
+           }
+       }
+       $("#new-topic").on("click", function (event) {
+            event.preventDefault()
+            var topic = $("#topic-input").val().trim()
+
+            topics.push(topic)
+
+            renderButtons()
+
+        })
+          
+       
+
+     
+      $(document).on("click", ".topic-btn", displayInfo);
+renderButtons()
+
+
+    </script>
+
+</body>
+
+</html>
+
+    </script>
+
+</body>
+
+</html>
